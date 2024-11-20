@@ -4,6 +4,8 @@ import com.github.esgoet.backend.dto.BoardDto;
 import com.github.esgoet.backend.model.Board;
 import com.github.esgoet.backend.service.BoardService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,27 +17,32 @@ public class BoardController {
     private final BoardService boardService;
 
     @GetMapping
-    public List<Board> getAllBoards() {
-        return boardService.getAllBoards();
+    public ResponseEntity<List<Board>> getAllBoards() {
+        List<Board> boards = boardService.getAllBoards();
+        return ResponseEntity.ok(boards);
     }
 
     @GetMapping("/{id}")
-    public Board getBoardById(@PathVariable String id) {
-        return boardService.getBoardById(id);
+    public ResponseEntity<Board> getBoardById(@PathVariable String id) {
+        Board board = boardService.getBoardById(id);
+        return ResponseEntity.ok(board);
     }
 
     @PostMapping
-    public Board createBoard(@RequestBody BoardDto board) {
-        return boardService.createBoard(board);
+    public ResponseEntity<Board> createBoard(@RequestBody BoardDto boardDto) {
+        Board board = boardService.createBoard(boardDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(board);
     }
 
     @PutMapping("/{id}")
-    public Board updateBoard(@PathVariable String id, @RequestBody BoardDto updatedBoard) {
-        return boardService.updateBoard(id, updatedBoard);
+    public ResponseEntity<Board> updateBoard(@PathVariable String id, @RequestBody BoardDto boardDto) {
+        Board board = boardService.updateBoard(id, boardDto);
+        return ResponseEntity.ok(board);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteBoard(@PathVariable String id) {
+    public ResponseEntity<Void> deleteBoard(@PathVariable String id) {
         boardService.deleteBoard(id);
+        return ResponseEntity.noContent().build();
     }
 }

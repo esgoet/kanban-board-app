@@ -4,6 +4,7 @@ import com.github.esgoet.backend.dto.BoardDto;
 import com.github.esgoet.backend.model.Board;
 import com.github.esgoet.backend.model.Column;
 import com.github.esgoet.backend.repository.BoardRepository;
+import com.github.esgoet.backend.repository.TaskRepository;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -16,7 +17,8 @@ import static org.mockito.Mockito.*;
 class BoardServiceTest {
     private final IdService idService = mock(IdService.class);
     private final BoardRepository boardRepository = mock(BoardRepository.class);
-    private final BoardService boardService = new BoardService(boardRepository, idService);
+    private final TaskRepository taskRepository = mock(TaskRepository.class);
+    private final BoardService boardService = new BoardService(boardRepository, idService, taskRepository);
 
     @Test
     void getAllBoards_whenNoBoards_ReturnEmptyList() {
@@ -107,6 +109,28 @@ class BoardServiceTest {
     }
 
     @Test
+    void updateBoard_deletesTasksRelatedToRemovedColumns() {
+        // GIVEN
+        String boardId = "1";
+        Column columnToStay = new Column("col-1", "Column 1", List.of());
+        Column columnToBeDeleted = new Column("col-2", "Column 2", List.of("task-1", "task-2"));
+        Board existingBoard = new Board(boardId, "Board 1", List.of(columnToStay, columnToBeDeleted));
+        BoardDto updatedBoardDto = new BoardDto("Updated Board", List.of(columnToStay));
+
+        when(boardRepository.findById(boardId)).thenReturn(Optional.of(existingBoard));
+        when(boardRepository.save(any(Board.class))).thenReturn(new Board(boardId, updatedBoardDto.name(), updatedBoardDto.columns()));
+        doNothing().when(taskRepository).deleteTasksByColumnId("col-2");
+
+        // WHEN
+        Board actual = boardService.updateBoard(boardId, updatedBoardDto);
+
+        // THEN
+        Board expected = new Board(boardId, "Updated Board", List.of(columnToStay));
+        verify(taskRepository).deleteTasksByColumnId("col-2");
+        assertEquals(expected, actual);
+    }
+
+    @Test
     void updateBoard_whenBoardDoesNotExist_throwsNoSuchElementException() {
         //GIVEN
         String nonExistingId = "999";
@@ -124,12 +148,22 @@ class BoardServiceTest {
 
     @Test
     void deleteBoard() {
-        //GIVEN
-        String existingId = "1";
-        doNothing().when(boardRepository).deleteById(existingId);
-        //WHEN
-        boardService.deleteBoard(existingId);
-        //THEN
-        verify(boardRepository).deleteById(existingId);
+        // GIVEN
+        String boardId = "1";
+        Column column1 = new Column("col-1", "Column 1", List.of("task-1", "task-2"));
+        Column column2 = new Column("col-2", "Column 2", List.of("task-3"));
+        Board board = new Board(boardId, "Board 1", List.of(column1, column2));
+
+        when(boardRepository.findById(boardId)).thenReturn(Optional.of(board));
+        doNothing().when(taskRepository).deleteTasksByColumnId(anyString());
+        doNothing().when(boardRepository).deleteById(boardId);
+
+        // WHEN
+        boardService.deleteBoard(boardId);
+
+        // THEN
+        verify(taskRepository).deleteTasksByColumnId("col-1");
+        verify(taskRepository).deleteTasksByColumnId("col-2");
+        verify(boardRepository).deleteById(boardId);
     }
 }
