@@ -2,6 +2,7 @@ package com.github.esgoet.backend.service;
 
 import com.github.esgoet.backend.dto.TaskDto;
 import com.github.esgoet.backend.dto.UpdateTaskDto;
+import com.github.esgoet.backend.exception.ElementNotFoundException;
 import com.github.esgoet.backend.model.Board;
 import com.github.esgoet.backend.model.Task;
 import com.github.esgoet.backend.repository.BoardRepository;
@@ -10,7 +11,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
@@ -19,20 +19,23 @@ public class TaskService {
     private final TaskRepository taskRepository;
     private final BoardRepository boardRepository;
 
+    private static final String TASK_ELEMENT = "Task";
+    private static final String BOARD_ELEMENT = "Board including column";
+
     public List<Task> getTasksByColumnId(String columnId) {
         return taskRepository.findTasksByColumnId(columnId)
-                .orElseThrow(() -> new NoSuchElementException("Tasks with column ID " + columnId + " not found"));
+                .orElseThrow(() -> new ElementNotFoundException("Tasks in column", columnId));
     }
 
     public Task getTaskById(String id) {
         return taskRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("Task with ID " + id + " not found"));
+                .orElseThrow(() -> new ElementNotFoundException(TASK_ELEMENT, id));
     }
 
     public Task createTask(String columnId, TaskDto task) {
         String generatedId = idService.generateId();
         Board board = boardRepository.findByColumnId(columnId)
-                .orElseThrow(() -> new NoSuchElementException("Board with column ID " + columnId + " not found"));
+                .orElseThrow(() -> new ElementNotFoundException(BOARD_ELEMENT, columnId));
         board.columns().stream()
                 .filter(column -> column.id().equals(columnId))
                 .findFirst()
@@ -49,10 +52,10 @@ public class TaskService {
 
     public Task updateTask(String id, UpdateTaskDto taskDto) {
         Task existingTask = taskRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("Task with ID " + id + " not found"));
+                .orElseThrow(() -> new ElementNotFoundException(TASK_ELEMENT, id));
         if (!existingTask.columnId().equals(taskDto.columnId())) {
             Board board = boardRepository.findByColumnId(existingTask.columnId())
-                    .orElseThrow(() -> new NoSuchElementException("Board with column ID " + existingTask.columnId() + " not found"));
+                    .orElseThrow(() -> new ElementNotFoundException(BOARD_ELEMENT, taskDto.columnId()));
 
             board.columns().stream()
                     .filter(column -> column.id().equals(existingTask.columnId()))
@@ -76,9 +79,9 @@ public class TaskService {
 
     public void deleteTask(String id) {
         Task task = taskRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("Task with ID " + id + " not found"));
+                .orElseThrow(() -> new ElementNotFoundException(TASK_ELEMENT, id));
         Board board = boardRepository.findByColumnId(task.columnId())
-                .orElseThrow(() -> new NoSuchElementException("Board with column ID " + task.columnId() + " not found"));
+                .orElseThrow(() -> new ElementNotFoundException(BOARD_ELEMENT, task.columnId()));
         board.columns().stream()
                 .filter(column -> column.id().equals(task.columnId()))
                 .findFirst()

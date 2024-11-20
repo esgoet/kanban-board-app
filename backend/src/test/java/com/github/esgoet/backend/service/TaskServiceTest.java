@@ -2,6 +2,7 @@ package com.github.esgoet.backend.service;
 
 import com.github.esgoet.backend.dto.TaskDto;
 import com.github.esgoet.backend.dto.UpdateTaskDto;
+import com.github.esgoet.backend.exception.ElementNotFoundException;
 import com.github.esgoet.backend.model.Board;
 import com.github.esgoet.backend.model.Column;
 import com.github.esgoet.backend.model.Status;
@@ -12,7 +13,6 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -69,12 +69,12 @@ class TaskServiceTest {
     }
 
     @Test
-    void getTaskById_whenNoTask_ThrowsNoSuchElementException() {
+    void getTaskById_whenNoTask_ThrowsElementNotFoundException() {
         //GIVEN
         String nonExistentId = "task-999";
         when(taskRepository.findById(nonExistentId)).thenReturn(Optional.empty());
         //WHEN
-        NoSuchElementException exception = assertThrows(NoSuchElementException.class, () -> taskService.getTaskById(nonExistentId));
+        ElementNotFoundException exception = assertThrows(ElementNotFoundException.class, () -> taskService.getTaskById(nonExistentId));
         assertEquals("Task with ID task-999 not found", exception.getMessage());
     }
 
@@ -155,14 +155,14 @@ class TaskServiceTest {
     }
 
     @Test
-    void updateTask_whenTaskDoesNotExist_throwsNoSuchElementException() {
+    void updateTask_whenTaskDoesNotExist_throwsElementNotFoundException() {
         //GIVEN
         String nonExistingId = "task-999";
         UpdateTaskDto updatedTaskDto = new UpdateTaskDto("col-1","Updated Task", "Updated Description", Status.DONE, null);
 
         when(taskRepository.findById(nonExistingId)).thenReturn(Optional.empty());
         //THEN
-        NoSuchElementException exception = assertThrows(NoSuchElementException.class,
+        ElementNotFoundException exception = assertThrows(ElementNotFoundException.class,
                 //WHEN
                 () -> taskService.updateTask(nonExistingId, updatedTaskDto));
         assertEquals("Task with ID task-999 not found", exception.getMessage());

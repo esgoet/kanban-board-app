@@ -8,7 +8,7 @@ import com.github.esgoet.backend.repository.TaskRepository;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.ElementNotFoundException;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -61,12 +61,12 @@ class BoardServiceTest {
     }
 
     @Test
-    void getBoardById_whenNoBoard_ThrowsNoSuchElementException() {
+    void getBoardById_whenNoBoard_ThrowsElementNotFoundException() {
         //GIVEN
         String nonExistentId = "999";
         when(boardRepository.findById(nonExistentId)).thenReturn(Optional.empty());
         //WHEN
-        NoSuchElementException exception = assertThrows(NoSuchElementException.class, () -> boardService.getBoardById(nonExistentId));
+        ElementNotFoundException exception = assertThrows(ElementNotFoundException.class, () -> boardService.getBoardById(nonExistentId));
         assertEquals("Board with ID 999 not found", exception.getMessage());
     }
 
@@ -131,14 +131,14 @@ class BoardServiceTest {
     }
 
     @Test
-    void updateBoard_whenBoardDoesNotExist_throwsNoSuchElementException() {
+    void updateBoard_whenBoardDoesNotExist_throwsElementNotFoundException() {
         //GIVEN
         String nonExistingId = "999";
         BoardDto updatedBoardDto = new BoardDto("Updated Board", List.of(new Column("2","Column 1", List.of())));
 
         when(boardRepository.findById(nonExistingId)).thenReturn(Optional.empty());
         //THEN
-        NoSuchElementException exception = assertThrows(NoSuchElementException.class,
+        ElementNotFoundException exception = assertThrows(ElementNotFoundException.class,
                 //WHEN
                 () -> boardService.updateBoard(nonExistingId, updatedBoardDto));
         assertEquals("Board with ID 999 not found", exception.getMessage());
