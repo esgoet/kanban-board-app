@@ -19,6 +19,11 @@ public class BoardController {
         return boardService.getAllBoards();
     }
 
+    @GetMapping("/{id}")
+    public Board getBoardById(@PathVariable String id) {
+        return boardService.getBoardById(id);
+    }
+
     @PostMapping
     public Board createBoard(@RequestBody BoardDto board) {
         return boardService.createBoard(board);

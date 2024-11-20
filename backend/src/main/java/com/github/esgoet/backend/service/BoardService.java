@@ -19,6 +19,10 @@ public class BoardService {
         return boardRepository.findAll();
     }
 
+    public Board getBoardById(String id) {
+        return boardRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Board with ID " + id + " not found"));
+    }
+
     public Board createBoard(BoardDto board) {
         return boardRepository.save(new Board(idService.generateId(), board.name(), board.columns()));
     }
@@ -33,4 +37,6 @@ public class BoardService {
     public void deleteBoard(String id) {
         boardRepository.deleteById(id);
     }
+
+
 }

@@ -46,6 +46,29 @@ class BoardServiceTest {
     }
 
     @Test
+    void getBoardById_whenBoardExists_ReturnBoard() {
+        //GIVEN
+        Board board = new Board("1", "Board 1", List.of());
+        when(boardRepository.findById("1")).thenReturn(Optional.of(board));
+        //WHEN
+        Board actual = boardService.getBoardById("1");
+        //THEN
+        Board expected = new Board("1", "Board 1", List.of());
+        verify(boardRepository).findById("1");
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void getBoardById_whenNoBoard_ThrowsNoSuchElementException() {
+        //GIVEN
+        String nonExistentId = "999";
+        when(boardRepository.findById(nonExistentId)).thenReturn(Optional.empty());
+        //WHEN
+        NoSuchElementException exception = assertThrows(NoSuchElementException.class, () -> boardService.getBoardById(nonExistentId));
+        assertEquals("Board with ID 999 not found", exception.getMessage());
+    }
+
+    @Test
     void createBoard_savesBoardWithGeneratedId() {
         //GIVEN
         BoardDto boardDto = new BoardDto("New Board", List.of());
@@ -84,7 +107,7 @@ class BoardServiceTest {
     }
 
     @Test
-    void updateBoard_whenBoardDoesNotExist_throwsException() {
+    void updateBoard_whenBoardDoesNotExist_throwsNoSuchElementException() {
         //GIVEN
         String nonExistingId = "999";
         BoardDto updatedBoardDto = new BoardDto("Updated Board", List.of(new Column("2","Column 1", List.of())));
