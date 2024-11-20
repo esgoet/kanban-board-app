@@ -1,6 +1,7 @@
 package com.github.esgoet.backend.controller;
 
 import com.github.esgoet.backend.dto.BoardDto;
+import com.github.esgoet.backend.dto.NewBoardDto;
 import com.github.esgoet.backend.model.Board;
 import com.github.esgoet.backend.service.BoardService;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +30,7 @@ public class BoardController {
     }
 
     @PostMapping
-    public ResponseEntity<Board> createBoard(@RequestBody BoardDto boardDto) {
+    public ResponseEntity<Board> createBoard(@RequestBody NewBoardDto boardDto) {
         Board board = boardService.createBoard(boardDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(board);
     }

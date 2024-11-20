@@ -1,6 +1,7 @@
 package com.github.esgoet.backend.service;
 
 import com.github.esgoet.backend.dto.BoardDto;
+import com.github.esgoet.backend.dto.NewBoardDto;
 import com.github.esgoet.backend.exception.ElementNotFoundException;
 import com.github.esgoet.backend.model.Board;
 import com.github.esgoet.backend.model.Column;
@@ -73,7 +74,7 @@ class BoardServiceTest {
     @Test
     void createBoard_savesBoardWithGeneratedId() {
         //GIVEN
-        BoardDto boardDto = new BoardDto("New Board", List.of());
+        NewBoardDto boardDto = new NewBoardDto("New Board");
         String generatedId = "1";
         when(idService.generateId()).thenReturn(generatedId);
 

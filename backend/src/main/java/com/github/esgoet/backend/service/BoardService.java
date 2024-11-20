@@ -1,6 +1,7 @@
 package com.github.esgoet.backend.service;
 
 import com.github.esgoet.backend.dto.BoardDto;
+import com.github.esgoet.backend.dto.NewBoardDto;
 import com.github.esgoet.backend.exception.ElementNotFoundException;
 import com.github.esgoet.backend.model.Board;
 import com.github.esgoet.backend.model.Column;
@@ -9,6 +10,7 @@ import com.github.esgoet.backend.repository.TaskRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -28,8 +30,8 @@ public class BoardService {
         return boardRepository.findById(id).orElseThrow(() -> new ElementNotFoundException(ELEMENT_TYPE, id));
     }
 
-    public Board createBoard(BoardDto board) {
-        return boardRepository.save(new Board(idService.generateId(), board.name(), board.columns()));
+    public Board createBoard(NewBoardDto board) {
+        return boardRepository.save(new Board(idService.generateId(), board.name(), new ArrayList<>()));
     }
 
     public Board updateBoard(String id, BoardDto updatedBoard) {
@@ -37,7 +39,15 @@ public class BoardService {
                 .orElseThrow(() -> new ElementNotFoundException(ELEMENT_TYPE, id));
 
         List<String> existingColumnIds = existingBoard.columns().stream().map(Column::id).toList();
-        List<String> updatedColumnIds = updatedBoard.columns().stream().map(Column::id).toList();
+        List<Column> updatedColumns = updatedBoard.columns().stream()
+                .map(column -> {
+                    if (column.id() == null || column.id().isEmpty()) {
+                        return new Column(idService.generateId(), column.name(), column.tasks());
+                    }
+                    return column;
+                })
+                .toList();
+        List<String> updatedColumnIds = updatedColumns.stream().map(Column::id).toList();
         List<String> removedColumnIds = existingColumnIds.stream()
                 .filter(columnId -> !updatedColumnIds.contains(columnId))
                 .toList();
@@ -46,7 +56,7 @@ public class BoardService {
 
         return boardRepository.save(existingBoard
                 .withName(updatedBoard.name())
-                .withColumns(updatedBoard.columns()));
+                .withColumns(updatedColumns));
     }
 
     public void deleteBoard(String id) {
