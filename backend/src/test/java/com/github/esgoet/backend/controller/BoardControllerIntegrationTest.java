@@ -80,8 +80,7 @@ class BoardControllerIntegrationTest {
                 .contentType("application/json")
                 .content("""
                         {
-                          "name": "Board 1",
-                          "columns": []
+                          "name": "Board 1"
                         }
                         """))
                 //THEN
@@ -125,7 +124,6 @@ class BoardControllerIntegrationTest {
                               "tasks": ["task-1"]
                             },
                             {
-                              "id": "col-2",
                               "name": "Column 2",
                               "tasks": []
                             }
@@ -145,13 +143,13 @@ class BoardControllerIntegrationTest {
                               "tasks": ["task-1"]
                             },
                             {
-                              "id": "col-2",
                               "name": "Column 2",
                               "tasks": []
                             }
                           ]
                         }
-                        """));
+                        """))
+                .andExpect(jsonPath("$.columns[1].id").exists());
         //WHEN
         mockMvc.perform(get("/api/boards/1"))
                 //THEN
@@ -167,13 +165,13 @@ class BoardControllerIntegrationTest {
                               "tasks": ["task-1"]
                             },
                             {
-                              "id": "col-2",
                               "name": "Column 2",
                               "tasks": []
                             }
                           ]
                         }
-                        """));
+                        """))
+                .andExpect(jsonPath("$.columns[1].id").exists());
     }
 
     @DirtiesContext

@@ -93,16 +93,18 @@ class BoardServiceTest {
     void updateBoard_whenBoardExists_returnUpdatedBoard() {
         //GIVEN
         String existingId = "1";
+        String newColId = "col-1";
         Board existingBoard = new Board(existingId, "Existing Board", List.of());
-        BoardDto updatedBoardDto = new BoardDto("Updated Board", List.of(new Column("2","Column 1", List.of())));
+        BoardDto updatedBoardDto = new BoardDto("Updated Board", List.of(new Column(null, "Column 1", List.of())));
 
         when(boardRepository.findById(existingId)).thenReturn(Optional.of(existingBoard));
-        Board updatedBoard = new Board(existingId, updatedBoardDto.name(), updatedBoardDto.columns());
+        when(idService.generateId()).thenReturn(newColId);
+        Board updatedBoard = new Board(existingId, updatedBoardDto.name(), List.of(new Column(newColId, "Column 1", List.of())));
         when(boardRepository.save(updatedBoard)).thenReturn(updatedBoard);
         //WHEN
         Board actual = boardService.updateBoard(existingId, updatedBoardDto);
         //THEN
-        Board expected = new Board(existingId, updatedBoardDto.name(), updatedBoardDto.columns());
+        Board expected = new Board(existingId, updatedBoardDto.name(), List.of(new Column(newColId, "Column 1", List.of())));
         verify(boardRepository).findById(existingId);
         verify(boardRepository).save(updatedBoard);
         assertEquals(expected, actual);
