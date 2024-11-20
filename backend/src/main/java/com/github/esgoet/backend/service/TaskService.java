@@ -1,7 +1,7 @@
 package com.github.esgoet.backend.service;
 
+import com.github.esgoet.backend.dto.NewTaskDto;
 import com.github.esgoet.backend.dto.TaskDto;
-import com.github.esgoet.backend.dto.UpdateTaskDto;
 import com.github.esgoet.backend.exception.ElementNotFoundException;
 import com.github.esgoet.backend.model.Board;
 import com.github.esgoet.backend.model.Task;
@@ -32,7 +32,7 @@ public class TaskService {
                 .orElseThrow(() -> new ElementNotFoundException(TASK_ELEMENT, id));
     }
 
-    public Task createTask(String columnId, TaskDto task) {
+    public Task createTask(String columnId, NewTaskDto task) {
         String generatedId = idService.generateId();
         Board board = boardRepository.findByColumnId(columnId)
                 .orElseThrow(() -> new ElementNotFoundException(BOARD_ELEMENT, columnId));
@@ -49,7 +49,7 @@ public class TaskService {
                 task.deadline()));
     }
 
-    public Task updateTask(String id, UpdateTaskDto taskDto) {
+    public Task updateTask(String id, TaskDto taskDto) {
         Task existingTask = taskRepository.findById(id)
                 .orElseThrow(() -> new ElementNotFoundException(TASK_ELEMENT, id));
         if (!existingTask.columnId().equals(taskDto.columnId())) {

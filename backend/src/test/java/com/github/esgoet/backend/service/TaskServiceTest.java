@@ -1,7 +1,7 @@
 package com.github.esgoet.backend.service;
 
+import com.github.esgoet.backend.dto.NewTaskDto;
 import com.github.esgoet.backend.dto.TaskDto;
-import com.github.esgoet.backend.dto.UpdateTaskDto;
 import com.github.esgoet.backend.exception.ElementNotFoundException;
 import com.github.esgoet.backend.model.Board;
 import com.github.esgoet.backend.model.Column;
@@ -80,7 +80,7 @@ class TaskServiceTest {
     @Test
     void createTask_savesTaskWithGeneratedId() {
         //GIVEN
-        TaskDto taskDto = new TaskDto("Task 1", "Description 1",null);
+        NewTaskDto taskDto = new NewTaskDto("Task 1", "Description 1",null);
         String generatedId = "task-1";
         String columnId = "col-1";
         when(idService.generateId()).thenReturn(generatedId);
@@ -108,7 +108,7 @@ class TaskServiceTest {
         //GIVEN
         String existingId = "task-1";
         Task existingTask = new Task(existingId, "col-1", "Task 1", "Description 1",null);
-        UpdateTaskDto updatedTaskDto = new UpdateTaskDto("col-1","Updated Task", "Updated Description", null);
+        TaskDto updatedTaskDto = new TaskDto("col-1","Updated Task", "Updated Description", null);
 
         when(taskRepository.findById(existingId)).thenReturn(Optional.of(existingTask));
         Task updatedTask = new Task(existingId, "col-1", updatedTaskDto.title(), updatedTaskDto.description(),  updatedTaskDto.deadline());
@@ -129,7 +129,7 @@ class TaskServiceTest {
         //GIVEN
         String existingId = "task-1";
         Task existingTask = new Task(existingId, "col-1", "Task 1", "Description 1", null);
-        UpdateTaskDto updatedTaskDto = new UpdateTaskDto("col-2","Updated Task", "Updated Description",  null);
+        TaskDto updatedTaskDto = new TaskDto("col-2","Updated Task", "Updated Description",  null);
         Task updatedTask = new Task(existingId, "col-2", updatedTaskDto.title(), updatedTaskDto.description(), updatedTaskDto.deadline());
         Column oldColumn = new Column("col-1", "Column 1", new ArrayList<>());
         oldColumn.tasks().add(existingId);
@@ -157,7 +157,7 @@ class TaskServiceTest {
     void updateTask_whenTaskDoesNotExist_throwsElementNotFoundException() {
         //GIVEN
         String nonExistingId = "task-999";
-        UpdateTaskDto updatedTaskDto = new UpdateTaskDto("col-1","Updated Task", "Updated Description",null);
+        TaskDto updatedTaskDto = new TaskDto("col-1","Updated Task", "Updated Description",null);
 
         when(taskRepository.findById(nonExistingId)).thenReturn(Optional.empty());
         //THEN

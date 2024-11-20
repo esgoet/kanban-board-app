@@ -1,7 +1,7 @@
 package com.github.esgoet.backend.controller;
 
+import com.github.esgoet.backend.dto.NewTaskDto;
 import com.github.esgoet.backend.dto.TaskDto;
-import com.github.esgoet.backend.dto.UpdateTaskDto;
 import com.github.esgoet.backend.model.Task;
 import com.github.esgoet.backend.service.TaskService;
 import lombok.RequiredArgsConstructor;
@@ -30,13 +30,13 @@ public class TaskController {
     }
 
     @PostMapping("/column/{columnId}")
-    public ResponseEntity<Task> createTask(@PathVariable String columnId, @RequestBody TaskDto taskDto) {
+    public ResponseEntity<Task> createTask(@PathVariable String columnId, @RequestBody NewTaskDto taskDto) {
         Task task = taskService.createTask(columnId, taskDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(task);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Task> updateTask(@PathVariable String id, @RequestBody UpdateTaskDto taskDto) {
+    public ResponseEntity<Task> updateTask(@PathVariable String id, @RequestBody TaskDto taskDto) {
         Task task = taskService.updateTask(id, taskDto);
         return ResponseEntity.ok(task);
     }
