@@ -14,9 +14,9 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class BoardServiceTest {
-    private IdService idService = mock(IdService.class);
-    private BoardRepository boardRepository = mock(BoardRepository.class);
-    private BoardService boardService = new BoardService(boardRepository, idService);
+    private final IdService idService = mock(IdService.class);
+    private final BoardRepository boardRepository = mock(BoardRepository.class);
+    private final BoardService boardService = new BoardService(boardRepository, idService);
 
     @Test
     void getAllBoards_whenNoBoards_ReturnEmptyList() {
