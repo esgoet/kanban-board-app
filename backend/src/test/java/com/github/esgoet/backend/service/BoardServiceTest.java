@@ -1,6 +1,7 @@
 package com.github.esgoet.backend.service;
 
 import com.github.esgoet.backend.dto.BoardDto;
+import com.github.esgoet.backend.exception.ElementNotFoundException;
 import com.github.esgoet.backend.model.Board;
 import com.github.esgoet.backend.model.Column;
 import com.github.esgoet.backend.repository.BoardRepository;
@@ -8,7 +9,6 @@ import com.github.esgoet.backend.repository.TaskRepository;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
-import java.util.ElementNotFoundException;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
