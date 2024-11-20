@@ -46,7 +46,6 @@ public class TaskService {
                 columnId,
                 task.title(),
                 task.description(),
-                task.status(),
                 task.deadline()));
     }
 
@@ -73,7 +72,6 @@ public class TaskService {
                 .withColumnId(taskDto.columnId())
                 .withTitle(taskDto.title())
                 .withDescription(taskDto.description())
-                .withStatus(taskDto.status())
                 .withDeadline(taskDto.deadline()));
     }
 

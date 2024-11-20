@@ -2,7 +2,6 @@ package com.github.esgoet.backend.controller;
 
 import com.github.esgoet.backend.model.Board;
 import com.github.esgoet.backend.model.Column;
-import com.github.esgoet.backend.model.Status;
 import com.github.esgoet.backend.model.Task;
 import com.github.esgoet.backend.repository.BoardRepository;
 import com.github.esgoet.backend.repository.TaskRepository;
@@ -35,7 +34,7 @@ class BoardControllerIntegrationTest {
 
     @BeforeEach
     void setUp() {
-        task = new Task("task-1",  "col-1", "Task 1", "This is task 1", Status.TODO, Instant.now());
+        task = new Task("task-1",  "col-1", "Task 1", "This is task 1", Instant.now());
         Column column = new Column("col-1", "Column 1", List.of("task-1"));
         board = new Board("1", "Board 1", List.of(column));
     }

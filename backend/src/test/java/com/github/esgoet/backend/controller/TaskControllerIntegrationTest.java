@@ -2,7 +2,6 @@ package com.github.esgoet.backend.controller;
 
 import com.github.esgoet.backend.model.Board;
 import com.github.esgoet.backend.model.Column;
-import com.github.esgoet.backend.model.Status;
 import com.github.esgoet.backend.model.Task;
 import com.github.esgoet.backend.repository.BoardRepository;
 import com.github.esgoet.backend.repository.TaskRepository;
@@ -37,7 +36,7 @@ class TaskControllerIntegrationTest {
     @BeforeEach
     void setUp() {
         String deadline = "2025-01-01T00:00:00Z";
-        task = new Task("task-1", "col-1", "Task 1", "This is task 1", Status.TODO, Instant.parse(deadline));
+        task = new Task("task-1", "col-1", "Task 1", "This is task 1", Instant.parse(deadline));
         board = new Board("1", "Board 1", List.of(new Column("col-1", "Column 1", List.of("task-1")), new Column("col-2", "Column 2", new ArrayList<>())));
     }
 
@@ -55,7 +54,6 @@ class TaskControllerIntegrationTest {
                           "columnId": "col-1",
                           "title": "Task 1",
                           "description": "This is task 1",
-                          "status": "TODO",
                           "deadline": "2025-01-01T00:00:00Z"
                         }]
                         """));
@@ -75,7 +73,6 @@ class TaskControllerIntegrationTest {
                           "columnId": "col-1",
                           "title": "Task 1",
                           "description": "This is task 1",
-                          "status": "TODO",
                           "deadline": "2025-01-01T00:00:00Z"
                         }"""));
     }
@@ -93,7 +90,6 @@ class TaskControllerIntegrationTest {
                           "columnId": "col-1",
                           "title": "Task 1",
                           "description": "This is task 1",
-                          "status": "TODO",
                           "deadline": "2025-01-01T00:00:00Z"
                         }
                         """))
@@ -104,7 +100,6 @@ class TaskControllerIntegrationTest {
                           "columnId": "col-1",
                           "title": "Task 1",
                           "description": "This is task 1",
-                          "status": "TODO",
                           "deadline": "2025-01-01T00:00:00Z"
                         }
                         """))
@@ -146,8 +141,7 @@ class TaskControllerIntegrationTest {
                           "columnId": "col-1",
                           "title": "Task 1",
                           "description": "This is task 1",
-                          "status": "DONE",
-                          "deadline": "2025-01-01T00:00:00Z"
+                          "deadline": "2025-02-01T00:00:00Z"
                         }
                         """))
                 //THEN
@@ -158,8 +152,7 @@ class TaskControllerIntegrationTest {
                           "columnId": "col-1",
                           "title": "Task 1",
                           "description": "This is task 1",
-                          "status": "DONE",
-                          "deadline": "2025-01-01T00:00:00Z"
+                          "deadline": "2025-02-01T00:00:00Z"
                         }
                         """));
     }
@@ -178,7 +171,6 @@ class TaskControllerIntegrationTest {
                           "columnId": "col-2",
                           "title": "Task 1",
                           "description": "This is task 1",
-                          "status": "TODO",
                           "deadline": "2025-01-01T00:00:00Z"
                         }
                         """))
@@ -190,7 +182,6 @@ class TaskControllerIntegrationTest {
                           "columnId": "col-2",
                           "title": "Task 1",
                           "description": "This is task 1",
-                          "status": "TODO",
                           "deadline": "2025-01-01T00:00:00Z"
                         }
                         """));

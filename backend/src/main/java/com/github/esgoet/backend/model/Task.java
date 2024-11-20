@@ -12,7 +12,6 @@ public record Task(
         String columnId,
         String title,
         String description,
-        Status status,
         Instant deadline
 ) {
 }
