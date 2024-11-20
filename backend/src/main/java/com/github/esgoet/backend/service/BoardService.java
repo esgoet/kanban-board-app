@@ -1,5 +1,6 @@
 package com.github.esgoet.backend.service;
 
+import com.github.esgoet.backend.dto.BoardDto;
 import com.github.esgoet.backend.model.Board;
 import com.github.esgoet.backend.repository.BoardRepository;
 import lombok.RequiredArgsConstructor;
@@ -11,17 +12,18 @@ import java.util.NoSuchElementException;
 @Service
 @RequiredArgsConstructor
 public class BoardService {
-    private BoardRepository boardRepository;
+    private final BoardRepository boardRepository;
+    private final IdService idService;
 
     public List<Board> getAllBoards() {
         return boardRepository.findAll();
     }
 
-    public Board createBoard(Board board) {
-        return boardRepository.save(board);
+    public Board createBoard(BoardDto board) {
+        return boardRepository.save(new Board(idService.generateId(), board.name(), board.columns()));
     }
 
-    public Board updateBoard(String id, Board updatedBoard) {
+    public Board updateBoard(String id, BoardDto updatedBoard) {
         return boardRepository.save(boardRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Board with ID " + id + " not found"))
                 .withName(updatedBoard.name())

@@ -1,5 +1,6 @@
 package com.github.esgoet.backend.controller;
 
+import com.github.esgoet.backend.dto.BoardDto;
 import com.github.esgoet.backend.model.Board;
 import com.github.esgoet.backend.service.BoardService;
 import lombok.RequiredArgsConstructor;
@@ -11,7 +12,7 @@ import java.util.List;
 @RequestMapping("/api/boards")
 @RequiredArgsConstructor
 public class BoardController {
-    private BoardService boardService;
+    private final BoardService boardService;
 
     @GetMapping
     public List<Board> getAllBoards() {
@@ -19,12 +20,12 @@ public class BoardController {
     }
 
     @PostMapping
-    public Board createBoard(@RequestBody Board board) {
+    public Board createBoard(@RequestBody BoardDto board) {
         return boardService.createBoard(board);
     }
 
     @PutMapping("/{id}")
-    public Board updateBoard(@PathVariable String id, @RequestBody Board updatedBoard) {
+    public Board updateBoard(@PathVariable String id, @RequestBody BoardDto updatedBoard) {
         return boardService.updateBoard(id, updatedBoard);
     }
 
