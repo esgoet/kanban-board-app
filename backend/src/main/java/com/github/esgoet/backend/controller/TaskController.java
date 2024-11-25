@@ -17,9 +17,9 @@ import java.util.List;
 public class TaskController {
     private final TaskService taskService;
 
-    @GetMapping("/column/{columnId}")
-    public ResponseEntity<List<Task>> getTasksByColumnId(@PathVariable String columnId) {
-        List<Task> tasks = taskService.getTasksByColumnId(columnId);
+    @GetMapping
+    public ResponseEntity<List<Task>> getAllTasks() {
+        List<Task> tasks = taskService.getAllTasks();
         return ResponseEntity.ok(tasks);
     }
 
@@ -29,7 +29,7 @@ public class TaskController {
         return ResponseEntity.ok(task);
     }
 
-    @PostMapping("/column/{columnId}")
+    @PostMapping("/col/{columnId}")
     public ResponseEntity<Task> createTask(@PathVariable String columnId, @RequestBody NewTaskDto taskDto) {
         Task task = taskService.createTask(columnId, taskDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(task);

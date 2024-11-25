@@ -22,10 +22,10 @@ public class TaskService {
     private static final String TASK_ELEMENT = "Task";
     private static final String BOARD_ELEMENT = "Board including column";
 
-    public List<Task> getTasksByColumnId(String columnId) {
-        return taskRepository.findTasksByColumnId(columnId)
-                .orElseThrow(() -> new ElementNotFoundException("Tasks in column", columnId));
+    public List<Task> getAllTasks() {
+        return taskRepository.findAll();
     }
+
 
     public Task getTaskById(String id) {
         return taskRepository.findById(id)

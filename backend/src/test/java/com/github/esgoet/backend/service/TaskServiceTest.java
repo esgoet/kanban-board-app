@@ -24,33 +24,33 @@ class TaskServiceTest {
     private final TaskService taskService = new TaskService(idService, taskRepository, boardRepository);
 
     @Test
-    void getTasksByColumnId_whenNoTasks_ReturnEmptyList() {
+    void getTasks_whenNoTasks_ReturnEmptyList() {
         //GIVEN
-        String columnId = "col-1";
-        when(taskRepository.findTasksByColumnId(columnId)).thenReturn(Optional.of(List.of()));
+        when(taskRepository.findAll()).thenReturn(List.of());
         //WHEN
-        List<Task> actual = taskService.getTasksByColumnId(columnId);
+        List<Task> actual = taskService.getAllTasks();
         //THEN
         List<Task> expected = List.of();
+        verify(taskRepository).findAll();
         assertNotNull(actual);
         assertEquals(expected, actual);
     }
 
     @Test
-    void getTasksByColumnId_whenTasksExist_ReturnTasks() {
+    void getTasks_whenTasksExist_ReturnTasks() {
         //GIVEN
         String columnId = "col-1";
         List<Task> tasks = List.of(
                 new Task("task-1", columnId, "Task 1", "Description 1", null),
                 new Task("task-2", columnId, "Task 2", "Description 2", null));
-        when(taskRepository.findTasksByColumnId(columnId)).thenReturn(Optional.of(tasks));
+        when(taskRepository.findAll()).thenReturn(tasks);
         //WHEN
-        List<Task> actual = taskService.getTasksByColumnId(columnId);
+        List<Task> actual = taskService.getAllTasks();
         //THEN
         List<Task> expected = List.of(
                 new Task("task-1", columnId, "Task 1", "Description 1",  null),
                 new Task("task-2", columnId, "Task 2", "Description 2",  null));
-        verify(taskRepository).findTasksByColumnId(columnId);
+        verify(taskRepository).findAll();
         assertEquals(expected, actual);
     }
 

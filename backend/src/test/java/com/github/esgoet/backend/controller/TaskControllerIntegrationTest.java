@@ -41,11 +41,11 @@ class TaskControllerIntegrationTest {
     }
 
     @Test
-    void getTasksByColumnId() throws Exception {
+    void getTasks() throws Exception {
         //GIVEN
         taskRepository.save(task);
         //WHEN
-        mockMvc.perform(get("/api/tasks/column/col-1"))
+        mockMvc.perform(get("/api/tasks"))
                 //THEN
                 .andExpect(status().isOk())
                 .andExpect(content().json("""
@@ -83,7 +83,7 @@ class TaskControllerIntegrationTest {
         //GIVEN
         boardRepository.save(board);
         //WHEN
-        mockMvc.perform(post("/api/tasks/column/col-1")
+        mockMvc.perform(post("/api/tasks/col/col-1")
                 .contentType("application/json")
                 .content("""
                         {
